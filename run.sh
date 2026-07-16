@@ -15,3 +15,6 @@ export ROOT_PASSWORD=abc
 
 ./network.sh
 ./setup-debian.sh
+
+# Debian-Container starten
+systemd-nspawn --bind-ro=/nix/store -D /var/lib/machines/debian -b --network-bridge=br0
