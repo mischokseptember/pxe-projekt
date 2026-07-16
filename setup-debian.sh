@@ -2,7 +2,9 @@
 
 set -x -euo pipefail
 
-# Mit Altlasten aufräumen
+# Programmsuchpfad um die Ordner ergänzen, unter denen bei Debian Programme liegen
+export PATH=$PATH:/usr/sbin:/usr/bin:/sbin:/bin
+
 # Liegt ein reines Debian noch auf der Platte?
 if ! [ -e /var/lib/machines/debian.orig ]; then
   # Nein. Dann muss eins installiert werden.
@@ -16,5 +18,9 @@ if ! [ -e /var/lib/machines/debian.orig ]; then
   mv /var/lib/machines/debian.orig.tmp /var/lib/machines/debian.orig
 fi
 
+# Vorlagesystem klonen
 rm -rf /var/lib/machines/debian
 cp --reflink=auto -a /var/lib/machines/debian.orig /var/lib/machines/debian
+
+# Root-Passwort festlegen
+systemd-nspawn -D /var/lib/machines/debian -E PATH=$PATH -- bash -c "echo root:$ROOT_PASSWORD | chpasswd"
