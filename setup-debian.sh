@@ -41,3 +41,33 @@ iface host0 inet static
   address 10.0.0.1/24
   gateway 10.0.0.254
 EOF
+
+# Einstellungen für dnsmasq, unsere DHCP-Server- und TFTP-Server-App in einem
+tee /var/lib/machines/debian/etc/dnsmasq.conf <<EOF
+# DNS-Server abschalten (nur DHCP und TFTP sind hier relevant):
+port=0
+
+# DHCP-Bereich festlegen: Adressen sollen im Bereich
+# 10.0.0.100 bis 10.0.0.200 vergeben werden
+dhcp-range=10.0.0.100,10.0.0.200,255.255.255.0
+
+# Standardgateway mitteilen
+dhcp-option=3,10.0.0.254
+
+# Standard-DNS-Server mitteilen
+dhcp-option=6,8.8.8.8
+
+# Netzwerkboot -- zeige ein einfaches Menü
+pxe-prompt="Press F8 for menu or proceed with default in", 1
+
+# bietet pxelinux.0 für PXE via BIOS an
+pxe-service=x86PC, "pxelinux.0", pxelinux
+# bietet syslinux für PXE via UEFI an
+pxe-service=X86-64_EFI, "syslinux", syslinux.efi
+# Aufgrund eines Bugs muss die vorherige Zeile gedoppelt werden
+pxe-service=X86-64_EFI, "syslinux", syslinux.efi
+
+# auf TFTP-Anfragen reagieren
+enable-tftp
+tftp-root=/pxe
+EOF
