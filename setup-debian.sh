@@ -24,3 +24,6 @@ cp --reflink=auto -a /var/lib/machines/debian.orig /var/lib/machines/debian
 
 # Root-Passwort festlegen
 systemd-nspawn -D /var/lib/machines/debian -E PATH=$PATH -- bash -c "echo root:$ROOT_PASSWORD | chpasswd"
+
+# Hostnamen festlegen
+echo debian > /var/lib/machines/debian/etc/hostname
