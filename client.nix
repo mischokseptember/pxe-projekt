@@ -1,19 +1,12 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 let
-  clientSystem = import <nixpkgs/nixos/lib/eval-config.nix> {
-    system = null;
-    modules = [ ./client.nix ];
-  };
   xstartup = pkgs.writeShellScript "xstartup.sh" ''
     . /etc/profile
     PATH=$PATH:/run/current-system/sw/bin ${pkgs.lxterminal}/bin/lxterminal -e "
       set -ex
       mkdir /nfsroot
       mount 10.0.0.1:/ /nfsroot
-      nix-store --load-db < /nfsroot/pxe/nix-path-registration
-      echo ${clientSystem.config.system.build.toplevel}
-      NIX_PATH=nixpkgs=${lib.cleanSource pkgs.path} bash /nfsroot/pxe/installation.sh || true
       bash
     " &
     exec ${pkgs.icewm}/bin/icewm-session
