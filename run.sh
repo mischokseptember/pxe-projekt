@@ -9,3 +9,4 @@ set -x -euo pipefail
 export PHYS_INTERFACE=${1:-enp0s31f6}
 
 ./network.sh
+./setup-debian.sh
