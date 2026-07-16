@@ -13,8 +13,9 @@ export PHYS_INTERFACE=${1:-enp0s31f6}
 # (Besser wäre es, Einloggen nur per SSH-Schlüssel zu erlauben)
 export ROOT_PASSWORD=abc
 
-./network.sh
+./setup-network.sh
 ./setup-debian.sh
+./setup-pxe-files.sh
 
 # Debian-Container starten
 systemd-nspawn --bind-ro=/nix/store -D /var/lib/machines/debian -b --network-bridge=br0
